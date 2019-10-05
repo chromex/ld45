@@ -10,13 +10,14 @@ class Footdust extends FlxSprite {
 		super(0, 0, "assets/sprites/footdust.png");
 		scale.x = 0;
 		scale.y = 0;
-		FlxTween.tween(scale, {x: 2, y: 2}, 1, {ease: FlxEase.quadOut});
+        alpha = .5;
+		FlxTween.tween(scale, {x: 2, y: 2}, .7, {ease: FlxEase.quadOut});
+		FlxTween.tween(this, {alpha: 0}, .7, {ease: FlxEase.quadOut});
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
-		alpha -= .01;
-		if (alpha < 0) {
+		if (alpha < .1) {
 			destroy();
 		}
 	}

@@ -29,6 +29,7 @@ class PlayState extends FlxState {
 		var helper:Float = Math.max(FlxG.width, FlxG.height) / 2;
 		FlxG.camera.deadzone = FlxRect.get((FlxG.width - helper) / 2, (FlxG.height - helper) / 2, helper, helper);
 		rng = new FlxRandom(3);
+		FlxG.camera.bgColor = 0x2f2e36;
 
 		followers = new FlxTypedGroup(30);
 
