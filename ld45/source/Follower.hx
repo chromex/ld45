@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxVector;
 import flixel.math.FlxRandom;
@@ -17,12 +18,15 @@ class Follower extends FlxSprite {
 		super(posx, posy);
 		loadGraphic(AssetPaths.follower__png, true, 32, 32);
 		animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 12, true);
-		animation.play("idle", true, false, -1);
+		animation.add("attack", [for (i in 12...25) i], 12, true);
+		animation.play("attack", true, false, -1);
+		setFacingFlip(FlxObject.LEFT, false, false);
+		setFacingFlip(FlxObject.RIGHT, true, false);
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
-        
+
 		if (leader != null) {
 			var followPoint:FlxVector = leader.GetFollowPoint();
 
@@ -32,6 +36,8 @@ class Follower extends FlxSprite {
 
 			followPoint.addPoint(leaderOffset);
 			var heading:FlxVector = followPoint.subtractNew(new FlxVector(x, y));
+            
+            facing = heading.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
 
 			if (heading.length < (kSpeed * elapsed)) {
 				x = followPoint.x;
