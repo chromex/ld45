@@ -25,6 +25,7 @@ class Odin extends FlxSprite {
 		loadGraphic(AssetPaths.odin__png, true, 32, 32);
 		animation.add("idle", [0, 1], 2, true);
 		animation.play("idle");
+		mass = 100;
 	}
 
 	private function handleMovement():Void {

@@ -1,9 +1,18 @@
 package;
 
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.math.FlxVector;
 import flixel.math.FlxRandom;
+
+enum Follower_State_ENUM {
+	Idle;
+	Walking;
+	Attacking;
+}
 
 class Follower extends FlxSprite {
 	public var leader:Odin;
@@ -14,18 +23,44 @@ class Follower extends FlxSprite {
 	static private var kSpreadRange:Float = 40;
 	static private var kSpeed:Float = 40;
 
+	private var state:Follower_State_ENUM;
+
 	public function new(posx:Float, posy:Float) {
 		super(posx, posy);
-		loadGraphic(AssetPaths.follower__png, true, 32, 32);
-		animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 12, true);
+		loadGraphic(AssetPaths.follower__png, true, 32, 32, true);
+		animation.add("idle", [for (i in 0...11) i], 12, true);
 		animation.add("attack", [for (i in 12...25) i], 12, true);
-		animation.play("attack", true, false, -1);
+		animation.add("walk", [for (i in 26...32) i], 18, true);
+		animation.play("idle", true, false, -1);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
+		this.setSize(15, 15);
+		this.offset.x = 10;
+		this.offset.y = 20;
+		var rng:FlxRandom = new FlxRandom();
+		mass = rng.float(70, 90);
+		scale = new FlxPoint(mass / 90, mass / 90);
+		state = Idle;
+	}
+
+	private function setState(newState:Follower_State_ENUM):Void {
+		if (state != newState) {
+			state = newState;
+			switch newState {
+				case Idle:
+					animation.play("idle", true, true, -1);
+				case Walking:
+					animation.play("walk", true, true, -1);
+				case Attacking:
+					animation.play("attack", true, true, -1);
+			}
+		}
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
+		velocity.x *= .9;
+		velocity.y *= .9;
 
 		if (leader != null) {
 			var followPoint:FlxVector = leader.GetFollowPoint();
@@ -36,13 +71,15 @@ class Follower extends FlxSprite {
 
 			followPoint.addPoint(leaderOffset);
 			var heading:FlxVector = followPoint.subtractNew(new FlxVector(x, y));
-            
-            facing = heading.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
+
+			facing = heading.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
 
 			if (heading.length < (kSpeed * elapsed)) {
+				setState(Idle);
 				x = followPoint.x;
 				y = followPoint.y;
 			} else {
+				setState(Walking);
 				var maxStep:FlxVector = heading.normalize().scale(elapsed * kSpeed);
 				x = x + maxStep.x;
 				y = y + maxStep.y;
