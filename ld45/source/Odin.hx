@@ -8,6 +8,9 @@ import flixel.FlxSprite;
  */
 class Odin extends FlxSprite
 {
+
+	var movespeed = 10;
+
 	/**
 	 * Constructor for the player - just initializing a simple sprite using a graphic.
 	 */ 
@@ -23,50 +26,31 @@ class Odin extends FlxSprite
 	 */
 	override public function update(elapsed:Float):Void
 	{
-		// Controls!
-		
-		// Default velocity to zero
-		velocity.x = 0;
-		velocity.y = 0;
-		
+		velocity.x *= .8;
+		velocity.y *= .8;
+
 		// If the player is pressing left, set velocity to left 100
 		if (FlxG.keys.anyPressed([LEFT, A]))
 		{
-			velocity.x -= 100;
+			velocity.x -= movespeed;
 		}
 		if (FlxG.keys.anyPressed([RIGHT, D]))
 		{
-			velocity.x += 100;
+			velocity.x += movespeed;
 		}
 			
 		if (FlxG.keys.anyPressed([UP, W]))
 		{
-			velocity.y -= 100;
+			velocity.y -= movespeed;
 		}
 		if (FlxG.keys.anyPressed([DOWN, S]))
 		{
-			velocity.y += 100;
+			velocity.y += movespeed;
 		}
+
 		
 		// Just like in PlayState, this is easy to forget but very important!
 		// Call this to automatically evaluate your velocity and position and stuff.
-		super.update(elapsed);
-		
-		// Here we are stopping the player from moving off the screen,
-		// with a little border or margin of 4 pixels.
-		
-		// Checking and setting the right side boundary
-		if (x > FlxG.width - width - 4)
-		{
-			x = FlxG.width - width - 4;
-		}
-		
-		// Checking and setting the left side boundary
-		if (x < 4)
-		{
-			x = 4;
-		}
-		
 		super.update(elapsed);
 	}
 }

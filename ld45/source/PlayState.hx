@@ -26,7 +26,7 @@ class PlayState extends FlxState
 		_player = new Odin();
 		// Adds the player to the state
 		add(_player);
-		FlxG.camera.zoom = 2;
+		FlxG.camera.zoom = 1;
 		FlxG.camera.follow(_player);
 		rng = new FlxRandom();
 
@@ -35,6 +35,8 @@ class PlayState extends FlxState
 		for (i in 0...10) {
 			// Instantiate a new sprite offscreen
 			var sprite = new FlxSprite(rng.float(FlxG.width / -2, FlxG.width / 2), rng.float(FlxG.height / -2, FlxG.height / 2), "assets/images/follower.png");
+			sprite.mass = 30;
+			
 			// Add it to the group of player bullets
 			followers.add(sprite);
 			add(sprite);
@@ -44,5 +46,7 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+
+		FlxG.collide(followers, _player);
 	}
 }
