@@ -6,6 +6,7 @@ import flixel.tile.FlxTilemap;
 import flixel.math.FlxRect;
 import lime.math.Rectangle;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import flixel.util.FlxSort;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -32,33 +33,34 @@ class PlayState extends FlxState {
 
 		LoadMap();
 
-		FlxG.camera.zoom = 3;
+		FlxG.camera.zoom = 2;
 		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN_TIGHT, GameConstants.CameraLerp);
 
 		rng = new FlxRandom(3);
+		FlxG.camera.bgColor = 0x2f2e36;
 
-		followers = new FlxTypedGroup(30);
+		followers = new FlxTypedGroup();
 
 		for (i in 0...20) {
 			var follower:Follower = new Follower(
 				rng.float(FlxG.width / -2, FlxG.width / 2), 
 				rng.float(FlxG.height / -2, FlxG.height / 2));
 			follower.mass = 30;
-			add(follower);
+			followers.add(follower);
 		}
 
 		for (i in 0...20) {
 			var follower:Follower = new Follower(rng.float(0, FlxG.width), rng.float(0, FlxG.height));
 			follower.leader = _player;
-			
-			add(follower);
+			followers.add(follower);
 		}
+
+		add(followers);
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
-
-		FlxG.collide(followers, _player);
+		followers.sort(FlxSort.byY);
 	}
 
 	private function PlaceEntities(entityName:String, entityData:Xml):Void {

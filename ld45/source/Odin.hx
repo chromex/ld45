@@ -1,5 +1,6 @@
 package;
 
+import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -7,11 +8,10 @@ import flixel.FlxSprite;
 /**
  * Class declaration for the Odinson
  */
-class Odin extends FlxSprite
-{
+class Odin extends FlxSprite {
 	// TODO: figure out how to get the real framecount;
 	var frameCount = 0;
-	var movespeed = 10;
+	var movespeed = 50;
 
 	/**
 	 * Constructor for the player - just initializing a simple sprite using a graphic.
@@ -28,50 +28,53 @@ class Odin extends FlxSprite
 	}
 
 	private function handleMovement():Void {
-		
-		velocity.x *= .8;
-		velocity.y *= .8;
+		velocity.x *= .9;
+		velocity.y *= .9;
+
+		var delta:FlxPoint = new FlxPoint(0, 0);
+		var moving = false;
 
 		// If the player is pressing left, set velocity to left 100
-		if (FlxG.keys.anyPressed([LEFT, A]))
-		{
-			velocity.x -= movespeed;
+		if (FlxG.keys.anyPressed([LEFT, A])) {
+			delta.x = 1;
+			moving = true;
 		}
-		if (FlxG.keys.anyPressed([RIGHT, D]))
-		{
-			velocity.x += movespeed;
-		}
-			
-		if (FlxG.keys.anyPressed([UP, W]))
-		{
-			velocity.y -= movespeed;
+		if (FlxG.keys.anyPressed([RIGHT, D])) {
+			delta.x = -1;
+			moving = true;
 		}
 
-		if (FlxG.keys.anyPressed([DOWN, S]))
-		{
-			velocity.y += movespeed;
+		if (FlxG.keys.anyPressed([UP, W])) {
+			delta.y = -1;
+			moving = true;
 		}
 
-		if (Math.abs(velocity.x) > .01  || Math.abs(velocity.y) > .01) {
+		if (FlxG.keys.anyPressed([DOWN, S])) {
+			delta.y = 1;
+			moving = true;
+		}
+
+		if (moving) {
+			var direction = Math.atan2(delta.x, delta.y);
+			velocity.x = -(Math.sin(direction)) * movespeed;
+			velocity.y = (Math.cos(direction)) * movespeed;
 			if (frameCount % 10 == 0) {
 				var footDust = new Footdust();
-				footDust.x = x;
-				footDust.y = y + 10;
+				footDust.x = x + 10;
+				footDust.y = y + 20;
 				FlxG.state.add(footDust);
-			} 
+			}
 		}
-
 	}
+
 	/**
 	 * Basic game loop function again!
 	 */
-	override public function update(elapsed:Float):Void
-	{
+	override public function update(elapsed:Float):Void {
 		frameCount++;
 
 		this.handleMovement();
 
-		
 		// Just like in PlayState, this is easy to forget but very important!
 		// Call this to automatically evaluate your velocity and position and stuff.
 		super.update(elapsed);
