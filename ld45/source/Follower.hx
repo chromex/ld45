@@ -1,6 +1,8 @@
 package;
 
 import flixel.FlxSprite;
+import flixel.math.FlxVector;
+import flixel.math.FlxRandom;
 
 class Follower extends FlxSprite {
 	public var leader:Odin;
