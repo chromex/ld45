@@ -27,7 +27,7 @@ class PlayState extends FlxState
 		// Adds the player to the state
 		add(_player);
 		FlxG.camera.zoom = 1;
-		FlxG.camera.follow(_player);
+		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN, GameConstants.CameraLerp);
 		rng = new FlxRandom();
 
 		followers = new FlxTypedGroup(30);
