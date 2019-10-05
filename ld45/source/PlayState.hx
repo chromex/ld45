@@ -25,13 +25,14 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
-		_player = new Odin();
+
+		_player = new Odin(100, 60);
 		// Adds the player to the state
 		add(_player);
-		FlxG.camera.zoom = 1;
-		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN, GameConstants.CameraLerp);
-		var helper:Float = Math.max(FlxG.width, FlxG.height) / 2;
-		FlxG.camera.deadzone = FlxRect.get((FlxG.width - helper) / 2, (FlxG.height - helper) / 2, helper, helper);
+
+		FlxG.camera.zoom = 3;
+		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN_TIGHT, GameConstants.CameraLerp);
+
 		rng = new FlxRandom();
 
 		followers = new FlxTypedGroup(30);
@@ -44,6 +45,13 @@ class PlayState extends FlxState
 			// Add it to the group of player bullets
 			followers.add(sprite);
 			add(sprite);
+		}
+
+		for (i in 0...20) {
+			var follower:Follower = new Follower(rng.float(0, FlxG.width), rng.float(0, FlxG.height));
+			follower.leader = _player;
+			
+			add(follower);
 		}
 	}
 
