@@ -22,7 +22,7 @@ class Follower extends FlxSprite {
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
-
+        
 		if (leader != null) {
 			var followPoint:FlxVector = leader.GetFollowPoint();
 
