@@ -22,23 +22,31 @@ class PlayState extends FlxState {
 
 	override public function create():Void {
 		super.create();
-		_player = new Odin();
+
+		_player = new Odin(100, 60);
 		// Adds the player to the state
 		add(_player);
-		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN, GameConstants.CameraLerp);
-		var helper:Float = Math.max(FlxG.width, FlxG.height) / 2;
-		FlxG.camera.deadzone = FlxRect.get((FlxG.width - helper) / 2, (FlxG.height - helper) / 2, helper, helper);
+
+		FlxG.camera.zoom = 3;
+		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN_TIGHT, GameConstants.CameraLerp);
+
 		rng = new FlxRandom(3);
 		FlxG.camera.bgColor = 0x2f2e36;
 
 		followers = new FlxTypedGroup(30);
 
 		for (i in 0...20) {
-			var follower:Follower = new Follower();
+			var follower:Follower = new Follower(
+				rng.float(FlxG.width / -2, FlxG.width / 2), 
+				rng.float(FlxG.height / -2, FlxG.height / 2));
 			follower.mass = 30;
+			add(follower);
+		}
 
-			follower.x = rng.float(FlxG.width / -2, FlxG.width / 2);
-			follower.y = rng.float(FlxG.height / -2, FlxG.height / 2);
+		for (i in 0...20) {
+			var follower:Follower = new Follower(rng.float(0, FlxG.width), rng.float(0, FlxG.height));
+			follower.leader = _player;
+			
 			add(follower);
 		}
 	}

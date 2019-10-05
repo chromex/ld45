@@ -1,6 +1,7 @@
 package;
 
 import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
@@ -14,9 +15,10 @@ class Odin extends FlxSprite {
 
 	/**
 	 * Constructor for the player - just initializing a simple sprite using a graphic.
-	 */
-	public function new() {
-		super(FlxG.width / 2 - 6, FlxG.height / 2 - 6);
+	 */ 
+	public function new(posx:Float, posy:Float)
+	{
+		super(posx, posy);
 		// This initializes this sprite object with the graphic of the ship and
 		// positions it in the middle of the screen.
 
@@ -77,5 +79,10 @@ class Odin extends FlxSprite {
 		// Just like in PlayState, this is easy to forget but very important!
 		// Call this to automatically evaluate your velocity and position and stuff.
 		super.update(elapsed);
+	}
+
+	public function GetFollowPoint():FlxVector
+	{
+		return FlxG.mouse.getPosition();
 	}
 }
