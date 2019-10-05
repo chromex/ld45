@@ -1,5 +1,7 @@
 package;
 
+import flixel.math.FlxRect;
+import lime.math.Rectangle;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -28,6 +30,8 @@ class PlayState extends FlxState
 		add(_player);
 		FlxG.camera.zoom = 1;
 		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN, GameConstants.CameraLerp);
+		var helper:Float = Math.max(FlxG.width, FlxG.height) / 2;
+		FlxG.camera.deadzone = FlxRect.get((FlxG.width - helper) / 2, (FlxG.height - helper) / 2, helper, helper);
 		rng = new FlxRandom();
 
 		followers = new FlxTypedGroup(30);
