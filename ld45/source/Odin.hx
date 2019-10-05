@@ -1,6 +1,5 @@
 package;
 
-import flixel.FlxGame;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
@@ -18,9 +17,13 @@ class Odin extends FlxSprite
 	 */ 
 	public function new()
 	{
+		super(FlxG.width / 2 - 6, FlxG.height / 2 - 6);
 		// This initializes this sprite object with the graphic of the ship and
 		// positions it in the middle of the screen.
-		super(FlxG.width / 2 - 6, FlxG.height / 2 - 6,"assets/sprites/odin.png");
+
+		loadGraphic(AssetPaths.odin__png, true, 32, 32);
+		animation.add("idle", [0, 1], 2, true);
+		animation.play("idle");
 	}
 
 	private function handleMovement():Void {

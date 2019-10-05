@@ -25,7 +25,6 @@ class PlayState extends FlxState {
 		_player = new Odin();
 		// Adds the player to the state
 		add(_player);
-		FlxG.camera.zoom = 1;
 		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN, GameConstants.CameraLerp);
 		var helper:Float = Math.max(FlxG.width, FlxG.height) / 2;
 		FlxG.camera.deadzone = FlxRect.get((FlxG.width - helper) / 2, (FlxG.height - helper) / 2, helper, helper);
