@@ -16,9 +16,12 @@ class Follower extends FlxSprite
 
 	public function new(posx:Float, posy:Float)
 	{
-		super(posx, posy, "assets/images/follower.png");
+		super(posx, posy);
+		loadGraphic(AssetPaths.follower__png, true, 32, 32);
+		animation.add("idle", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 12, true);
+		animation.play("idle", true, false, -1);
 	}
-	
+
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
