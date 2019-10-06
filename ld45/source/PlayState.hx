@@ -17,7 +17,7 @@ import flixel.math.FlxRandom;
 import flixel.group.FlxGroup;
 
 class PlayState extends FlxState {
-	var _player:Odin;
+	public var _player:Odin;
 
 	var _testSprite:FlxSprite;
 
@@ -70,6 +70,10 @@ class PlayState extends FlxState {
 
 		if (_player.IsDed()) {
 			overlay.showCredits();
+		}
+
+		if (enemyFollowers.length == 0 && _player.state != Dead) {
+			_player.setState(Dead, true);
 		}
 	}
 
