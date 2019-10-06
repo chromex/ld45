@@ -17,7 +17,7 @@ import flixel.math.FlxRandom;
 import flixel.group.FlxGroup;
 
 class PlayState extends FlxState {
-	var _player:Odin;
+	public var _player:Odin;
 
 	var _testSprite:FlxSprite;
 
