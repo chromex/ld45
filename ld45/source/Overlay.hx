@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import flixel.math.FlxPoint;
 import flixel.FlxG;
