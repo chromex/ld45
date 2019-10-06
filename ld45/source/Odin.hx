@@ -16,7 +16,7 @@ class Odin extends Agent {
 	var movespeed = 50;
 	var attackRange = 30;
 	var spellRange = 100;
-	var playerDamage = 10;
+	var playerDamage = 5;
 	var spellCooldown = 60;
 	var spellCooldownCounter = 60;
 
@@ -32,6 +32,7 @@ class Odin extends Agent {
 		animation.add("idle", [for (i in 0...2) i], 2, true);
 		animation.add("walk", [for (i in 3...7) i], 12, true);
 		animation.add("attack", [for (i in 7...14) i], 12, false);
+		animation.add("dead", [20], 12, false);
 		mass = 100;
 		this.setSize(15, 15);
 		this.offset.x = 30;
@@ -41,9 +42,6 @@ class Odin extends Agent {
 	}
 
 	private function handleMovement():Void {
-		velocity.x *= .9;
-		velocity.y *= .9;
-
 		var delta:FlxPoint = new FlxPoint(0, 0);
 		var moving = false;
 
@@ -89,6 +87,7 @@ class Odin extends Agent {
 	private function handleAttack():Void {
 		if (FlxG.keys.anyPressed([SPACE])) {
 			if (state != Attacking) {
+				FlxG.state.camera.shake(mass / 100000);
 				setState(Attacking);
 			}
 		}
@@ -133,13 +132,20 @@ class Odin extends Agent {
 	 * Basic game loop function again!
 	 */
 	override public function update(elapsed:Float):Void {
-		frameCount++;
+		scale.x = 1 + gameState.followers.length / 20;
+		scale.y = 1 + gameState.followers.length / 20;
 
-		this.handleMovement();
-		this.handleAttack();
-		this.handleSpellcasting();
-		// Just like in PlayState, this is easy to forget but very important!
-		// Call this to automatically evaluate your velocity and position and stuff.
+		frameCount++;
+		velocity.x *= .9;
+		velocity.y *= .9;
+
+		if (state != Dead) {
+			this.handleMovement();
+			this.handleAttack();
+			this.handleSpellcasting();
+			// Just like in PlayState, this is easy to forget but very important!
+			// Call this to automatically evaluate your velocity and position and stuff.
+		}
 		super.update(elapsed);
 	}
 
