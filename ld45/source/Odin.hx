@@ -12,7 +12,8 @@ class Odin extends Agent {
 	// TODO: figure out how to get the real framecount;
 	var frameCount = 0;
 	var movespeed = 50;
-	var attackRange = 50;
+	var attackRange = 30;
+	var playerDamage = 10;
 
 	/**
 	 * Constructor for the player - just initializing a simple sprite using a graphic.
@@ -30,6 +31,7 @@ class Odin extends Agent {
 		this.setSize(15, 15);
 		this.offset.x = 30;
 		this.offset.y = 60;
+		health = 100;
 	}
 
 	private function handleMovement():Void {
@@ -91,10 +93,10 @@ class Odin extends Agent {
 		}
 
 		if (state == Attacking) {
-			if (animation.frameIndex == 9 || animation.frameIndex == 8 || animation.frameIndex == 7) {
+			if (animation.frameIndex == 9) {
 				for (i in cast(FlxG.state, PlayState).followers) {
 					if (cast(i.getPosition().subtract(x, y), FlxVector).length < attackRange) {
-						i.hurt(1);
+						i.injure(playerDamage, this);
 					}
 				}
 			}

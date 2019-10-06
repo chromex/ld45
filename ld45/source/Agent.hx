@@ -19,6 +19,9 @@ class Agent extends FlxSprite {
 
 	private var state:Agent_State_ENUM;
 	private var oldPosition:FlxPoint;
+	private var damageCounter:Float = 0;
+
+	public var OriginColor:FlxColor;
 
 	public function new(posx:Float, posy:Float) {
 		super(posx, posy);
@@ -28,6 +31,31 @@ class Agent extends FlxSprite {
 		var rng:FlxRandom = new FlxRandom();
 		state = Idle;
 		oldPosition = new FlxPoint(x, y);
+	}
+
+	public function injure(damage:Float, origin:Agent) {
+		health -= damage;
+		damageCounter = 3;
+		var deltaFromOrigin:FlxVector = cast(this.getPosition(), FlxVector).subtract(origin.x,  origin.y);
+		velocity.x += deltaFromOrigin.x;
+		velocity.y += deltaFromOrigin.y;
+
+	}
+
+	override public function update(elapsed:Float):Void {
+		super.update(elapsed);
+		if (damageCounter > 0) {
+			damageCounter--;
+			if (color != FlxColor.RED) {
+				color = FlxColor.RED;
+			}
+		} else {
+			if (OriginColor != null && color != OriginColor) {
+				color = OriginColor;
+			} else if (color != FlxColor.WHITE) {
+				color = FlxColor.WHITE;
+			}
+		}
 	}
 
 	private function setState(newState:Agent_State_ENUM):Void {
