@@ -142,4 +142,8 @@ class Agent extends FlxSprite {
 	public function GetFollowPoint():FlxVector {
 		return this.getPosition();
 	}
+
+	public function IsDed():Bool {
+		return state == Dead;
+	}
 }

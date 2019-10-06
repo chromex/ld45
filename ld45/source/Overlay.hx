@@ -9,6 +9,7 @@ class Overlay extends FlxGroup {
 	public var overlay:FlxSprite;
 	public var title:FlxSprite;
     public var position:FlxPoint;
+	public var credits:FlxSprite;
 
 	public function new() {
 		super();
@@ -27,6 +28,14 @@ class Overlay extends FlxGroup {
 
 		if (FlxG.keys.anyJustPressed([W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE]) || FlxG.mouse.justPressed) {
 			remove(title);
+		}
+	}
+
+	public function showCredits() {
+		if (credits == null) {
+			credits = new FlxSprite(-520, -760, "assets/sprites/Credits.png");
+			credits.scale.set(2,2);
+			add(credits);
 		}
 	}
 }
