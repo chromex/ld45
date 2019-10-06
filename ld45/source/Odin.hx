@@ -71,7 +71,7 @@ class Odin extends Agent {
 			if (frameCount % 10 == 0) {
 				var footDust = new Footdust();
 				footDust.x = x + 10;
-				footDust.y = y + 5;
+				footDust.y = y + 10;
 				FlxG.state.add(footDust);
 			}
 		} else {
@@ -127,8 +127,8 @@ class Odin extends Agent {
 	 * Basic game loop function again!
 	 */
 	override public function update(elapsed:Float):Void {
-		scale.x = 1 + gameState.followers.length / 20;
-		scale.y = 1 + gameState.followers.length / 20;
+		scale.x = 1 + gameState.followers.length / 20 * GameConstants.Odin_FollowerScaleMultiplier;
+		scale.y = 1 + gameState.followers.length / 20 * GameConstants.Odin_FollowerScaleMultiplier;
 
 		frameCount++;
 		velocity.x *= .9;

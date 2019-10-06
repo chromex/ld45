@@ -100,8 +100,8 @@ class Agent extends FlxSprite {
 		}
 
 		var deltaFromOrigin:FlxVector = cast(this.getPosition(), FlxVector).subtract(origin.x, origin.y);
-		velocity.x += deltaFromOrigin.x;
-		velocity.y += deltaFromOrigin.y;
+		velocity.x += Util.Clamp(deltaFromOrigin.x, -10, 10);
+		velocity.y += Util.Clamp(deltaFromOrigin.y, -10, 10);
 	}
 
 	override public function update(elapsed:Float):Void {

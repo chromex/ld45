@@ -37,6 +37,7 @@ class GameConstants {
 	static public var Odin_StartHealth:Float = 100;
 	static public var Odin_Mass:Float = 100;
 
+	static public var Odin_FollowerScaleMultiplier:Float = 1;
 
 
 }
