@@ -34,7 +34,7 @@ class Agent extends FlxSprite {
 	private var damageCounter:Float = 0;
 	private var gameState:PlayState;
 
-	public var OriginColor:FlxColor;
+	public var OriginColor:FlxColor = FlxColor.GRAY;
 
 	public function setLeader(newLeader:Agent, overrideCurrentLeader:Bool = false) {
 		if (leader == null || overrideCurrentLeader) {
@@ -112,7 +112,7 @@ class Agent extends FlxSprite {
 				color = FlxColor.RED;
 			}
 		} else {
-			if (OriginColor != null) {
+			if (OriginColor != FlxColor.GRAY) {
 				if (color != OriginColor) {
 					color = OriginColor;
 				}

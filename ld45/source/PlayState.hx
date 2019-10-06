@@ -32,6 +32,7 @@ class PlayState extends FlxState {
 	var terrain:FlxTilemap;
 	var water:FlxTilemap;
 	var doodads:FlxTilemap;
+	var fogGroup:FlxGroup = new FlxGroup();
 
 	override public function create():Void {
 		super.create();
@@ -62,6 +63,7 @@ class PlayState extends FlxState {
 		}
 
 		add(agents);
+		add(fogGroup);
 	}
 
 	override public function update(elapsed:Float):Void {
@@ -92,6 +94,9 @@ class PlayState extends FlxState {
 			// 	agents.add(follower);
 			// 	follower.setFaction(enemy);
 			// }
+		} else if (entityName == "fog") {
+			var fog:Fog = new Fog(px, py);
+			fogGroup.add(fog);
 		}
 	}
 
