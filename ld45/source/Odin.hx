@@ -45,6 +45,7 @@ class Odin extends Agent {
 			delta.x = 1;
 			moving = true;
 		}
+
 		if (FlxG.keys.anyPressed([RIGHT, D])) {
 			delta.x = -1;
 			moving = true;
@@ -58,6 +59,11 @@ class Odin extends Agent {
 		if (FlxG.keys.anyPressed([DOWN, S])) {
 			delta.y = 1;
 			moving = true;
+		}
+
+		if (frameCount % 30 == 0) {
+			// this.setSize(this.frameWidth / 4, this.frameHeight / 4);
+			this.offset.y = (this.graphic.height - 20) * (this.scale.y);
 		}
 
 		if (moving) {
