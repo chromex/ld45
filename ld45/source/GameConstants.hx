@@ -54,7 +54,7 @@ class GameConstants {
 	static public var Odin_StartHealth:Float = 100;
 	static public var Odin_Mass:Float = 100;
 
-	static public var Odin_FollowerScaleMultiplier:Float = 1.5;
+	static public var Odin_FollowerScaleMultiplier:Float = 0.5;
 
 	/* QUOTH THE RAVEN */
 	static public var RAVEN_FLEERANGE:Float = 2000;

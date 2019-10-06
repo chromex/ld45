@@ -61,11 +61,6 @@ class Odin extends Agent {
 			moving = true;
 		}
 
-		if (frameCount % 30 == 0) {
-			// this.setSize(this.frameWidth / 4, this.frameHeight / 4);
-			this.offset.y = (this.graphic.height - 20) * (this.scale.y);
-		}
-
 		if (moving) {
 			setState(Walking);
 			var direction = Math.atan2(delta.x, delta.y);
@@ -134,8 +129,14 @@ class Odin extends Agent {
 	 * Basic game loop function again!
 	 */
 	override public function update(elapsed:Float):Void {
-		scale.x = 1 + gameState.followers.length / 20 * GameConstants.Odin_FollowerScaleMultiplier;
-		scale.y = 1 + gameState.followers.length / 20 * GameConstants.Odin_FollowerScaleMultiplier;
+		var newScale = Math.min(1 + (gameState.followers.length / 20) * GameConstants.Odin_FollowerScaleMultiplier, 4);
+		if (newScale != scale.x)
+		{
+			scale.x = newScale;
+			scale.y = newScale;
+			var theight = Math.abs(scale.y) * frameHeight;
+			this.offset.y = theight - (16 * Math.abs(scale.y)) - (gameState.followers.length * GameConstants.Odin_FollowerScaleMultiplier);
+		}
 
 		frameCount++;
 		velocity.x *= .9;
