@@ -106,6 +106,9 @@ class PlayState extends FlxState {
 		terrain.setTileProperties(0, FlxObject.ANY, null, null, 256);
 		terrain.setTileProperties(17, FlxObject.NONE);
 		terrain.setTileProperties(97, FlxObject.NONE);
+		terrain.setTileProperties(3, FlxObject.NONE, null, null, 5);
+		terrain.setTileProperties(19, FlxObject.NONE, null, null, 5);
+		terrain.setTileProperties(35, FlxObject.NONE, null, null, 5);
 		add(water);
 		add(terrain);
 		add(doodads);
