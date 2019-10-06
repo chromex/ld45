@@ -1,5 +1,6 @@
 package;
 
+import Agent.Faction_Enum;
 import flixel.util.FlxColor;
 import haxe.display.Position.Range;
 import flixel.FlxObject;
@@ -22,8 +23,9 @@ class PlayState extends FlxState {
 
 	var overlayCamera:FlxCamera;
 
-	var followers:FlxTypedGroup<Follower>;
-	var agents:FlxTypedGroup<FlxSprite>;
+	public var followers:FlxTypedGroup<Agent>;
+	public var enemyFollowers:FlxTypedGroup<Agent>;
+	public var agents:FlxTypedGroup<Agent>;
 
 	var rng:FlxRandom;
 
@@ -34,6 +36,8 @@ class PlayState extends FlxState {
 	override public function create():Void {
 		super.create();
 
+		followers = new FlxTypedGroup();
+		enemyFollowers = new FlxTypedGroup();
 		agents = new FlxTypedGroup();
 		LoadMap();
 
@@ -43,23 +47,9 @@ class PlayState extends FlxState {
 		rng = new FlxRandom(3);
 		FlxG.camera.bgColor = 0x2f2e36;
 
-		followers = new FlxTypedGroup();
-
 		for (i in 0...20) {
-			var follower:Follower = new Follower(
-				rng.float(FlxG.width / -2, FlxG.width / 2), 
-				rng.float(FlxG.height / -2, FlxG.height / 2));
+			var follower:Follower = new Follower(rng.float(FlxG.width / -2, FlxG.width / 2), rng.float(FlxG.height / -2, FlxG.height / 2));
 			follower.mass = 30;
-			follower.color = FlxColor.RED;
-			followers.add(follower);
-			agents.add(follower);
-		}
-
-		for (i in 0...20) {
-			var spawnRange:Float = 50;
-			var follower:Follower = new Follower(_player.x + 50 + rng.float(-spawnRange, spawnRange), _player.y + rng.float(-spawnRange, spawnRange));
-			follower.leader = _player;
-			followers.add(follower);
 			agents.add(follower);
 		}
 
@@ -69,28 +59,31 @@ class PlayState extends FlxState {
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 		agents.sort(FlxSort.byY);
-		FlxG.collide(followers, followers);
-		FlxG.collide(followers, terrain);
-		FlxG.collide(_player, followers);
-		FlxG.collide(_player, terrain);
+		FlxG.collide(agents, agents);
+		FlxG.collide(agents, terrain);
 	}
 
 	private function PlaceEntities(entityName:String, entityData:Xml):Void {
-		var px = entityData.get("x");
-		var py = entityData.get("y");
+		rng = new FlxRandom(3);
+		var px = Std.parseFloat(entityData.get("x"));
+		var py = Std.parseFloat(entityData.get("y"));
 
-		if (entityName == "player")
-		{
-			_player = new Odin(Std.parseInt(px), Std.parseInt(py));
+		if (entityName == "player") {
+			_player = new Odin(px, py);
 			agents.add(_player);
-		}
-		else if (entityName == "minion")
-		{
-			// RYDER SPAWN SHIT
-		}
-		else if (entityName == "leader")
-		{
-			// RYDER SPAWN MORE SHIT
+		} else if (entityName == "minion") {
+			for (i in 0...3) {
+				var spawnRange:Float = 50;
+				var follower:Follower = new Follower(px + 50 + rng.float(-spawnRange, spawnRange), py + rng.float(-spawnRange, spawnRange), enemy);
+				agents.add(follower);
+			}
+		} else if (entityName == "leader") {
+			// for (i in 0...6) {
+			// 	var spawnRange:Float = 50;
+			// 	var follower:Follower = new Follower(px + 50 + rng.float(-spawnRange, spawnRange), py + rng.float(-spawnRange, spawnRange));
+			// 	agents.add(follower);
+			// 	follower.setFaction(enemy);
+			// }
 		}
 	}
 
