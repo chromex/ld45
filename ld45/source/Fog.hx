@@ -14,8 +14,10 @@ class Fog extends FlxSprite {
         super(posx, posy);
         vertPos = posy;
 
-        if (rng.bool())
-            setFacingFlip(FlxObject.LEFT, true, false);
+        setFacingFlip(FlxObject.LEFT, true, false);
+        if (rng.bool()) {
+            facing = FlxObject.LEFT;
+        }
 
         loadGraphic(AssetPaths.Clouds__png, true, 80, 20);
         animation.add("cloud1", [0], 1, true);
@@ -39,6 +41,8 @@ class Fog extends FlxSprite {
     }
 
     override public function update(elapsed:Float):Void {
+        super.update(elapsed);
+        
         time += elapsed;
         x -= elapsed * 3.5;
         y = vertPos + 2 * FlxMath.fastSin(time);
