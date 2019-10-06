@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxColor;
 import haxe.display.Position.Range;
 import flixel.FlxObject;
 import flixel.tile.FlxTilemap;
@@ -46,6 +47,7 @@ class PlayState extends FlxState {
 				rng.float(FlxG.width / -2, FlxG.width / 2), 
 				rng.float(FlxG.height / -2, FlxG.height / 2));
 			follower.mass = 30;
+			follower.color = FlxColor.RED;
 			followers.add(follower);
 		}
 
@@ -61,6 +63,8 @@ class PlayState extends FlxState {
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 		followers.sort(FlxSort.byY);
+		FlxG.collide(followers, followers);
+		FlxG.collide(_player, followers);
 	}
 
 	private function PlaceEntities(entityName:String, entityData:Xml):Void {
