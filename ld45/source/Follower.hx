@@ -8,13 +8,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxVector;
 import flixel.math.FlxRandom;
 
-enum Follower_State_ENUM {
-	Idle;
-	Walking;
-	Attacking;
-}
-
-class Follower extends FlxSprite {
+class Follower extends Agent {
 	public var leader:Odin;
 
 	private var leaderOffset:FlxVector;
@@ -22,10 +16,6 @@ class Follower extends FlxSprite {
 	static private var rng:FlxRandom = new FlxRandom();
 	static private var kSpreadRange:Float = 80;
 	static private var kSpeed:Float = 40;
-
-	private var state:Follower_State_ENUM;
-
-	private var oldPosition:FlxPoint;
 
 	public function new(posx:Float, posy:Float) {
 		super(posx, posy);
@@ -49,20 +39,6 @@ class Follower extends FlxSprite {
 
 		state = Idle;
 		oldPosition = new FlxPoint(x, y);
-	}
-
-	private function setState(newState:Follower_State_ENUM):Void {
-		if (state != newState) {
-			state = newState;
-			switch newState {
-				case Idle:
-					animation.play("idle", true, true, -1);
-				case Walking:
-					animation.play("walk", true, true, -1);
-				case Attacking:
-					animation.play("attack", true, true, -1);
-			}
-		}
 	}
 
 	override public function update(elapsed:Float):Void {
