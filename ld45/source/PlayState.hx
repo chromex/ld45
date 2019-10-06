@@ -29,6 +29,7 @@ class PlayState extends FlxState {
 
 	var terrain:FlxTilemap;
 	var water:FlxTilemap;
+	var doodads:FlxTilemap;
 
 	override public function create():Void {
 		super.create();
@@ -96,6 +97,7 @@ class PlayState extends FlxState {
 	private function LoadMap():Void {
 		var map:FlxOgmoLoader = new FlxOgmoLoader(AssetPaths.island__oel);
 		water = map.loadTilemap(AssetPaths.water__png, 16, 16, "water");
+		doodads = map.loadTilemap(AssetPaths.doodads__png, 16, 16, "doodads");
 		terrain = map.loadTilemap(AssetPaths.tileset__png, 16, 16, "terrain");
 		terrain.follow();
 		terrain.setTileProperties(0, FlxObject.ANY, null, null, 256);
@@ -103,6 +105,7 @@ class PlayState extends FlxState {
 		terrain.setTileProperties(97, FlxObject.NONE);
 		add(water);
 		add(terrain);
+		add(doodads);
 
 		map.loadEntities(PlaceEntities, "entities");
 	}
