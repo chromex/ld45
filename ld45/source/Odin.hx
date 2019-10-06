@@ -1,5 +1,7 @@
 package;
 
+import flixel.util.FlxColor;
+import Agent.Faction_Enum;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
@@ -13,7 +15,10 @@ class Odin extends Agent {
 	var frameCount = 0;
 	var movespeed = 50;
 	var attackRange = 30;
+	var spellRange = 100;
 	var playerDamage = 10;
+	var spellCooldown = 60;
+	var spellCooldownCounter = 60;
 
 	/**
 	 * Constructor for the player - just initializing a simple sprite using a graphic.
@@ -32,6 +37,7 @@ class Odin extends Agent {
 		this.offset.x = 30;
 		this.offset.y = 60;
 		health = 100;
+		setFaction(player);
 	}
 
 	private function handleMovement():Void {
@@ -80,12 +86,7 @@ class Odin extends Agent {
 		}
 	}
 
-	/**
-	 * Basic game loop function again!
-	 */
-	override public function update(elapsed:Float):Void {
-		frameCount++;
-
+	private function handleAttack():Void {
 		if (FlxG.keys.anyPressed([SPACE])) {
 			if (state != Attacking) {
 				setState(Attacking);
@@ -94,27 +95,55 @@ class Odin extends Agent {
 
 		if (state == Attacking) {
 			if (animation.frameIndex == 9) {
-				for (i in cast(FlxG.state, PlayState).followers) {
+				for (i in cast(FlxG.state, PlayState).enemyFollowers) {
 					if (cast(i.getPosition().subtract(x, y), FlxVector).length < attackRange) {
 						i.injure(playerDamage, this);
 					}
 				}
 			}
+
 			if (animation.frameIndex == 13) {
 				// hack to get out of teh Attack state
 				state = Walking;
 				setState(Idle);
 			}
 		}
+	}
+
+	private function handleSpellcasting():Void {
+		if (spellCooldownCounter < spellCooldown) {
+			spellCooldownCounter++;
+		} else {
+			if (FlxG.keys.anyPressed([E])) {
+				for (i in cast(FlxG.state, PlayState).agents) {
+					if (i.faction != null) {
+						if (cast(i.getPosition().subtract(x, y), FlxVector).length < spellRange) {
+							i.setLeader(this);
+						}
+					}
+				}
+				spellCooldownCounter = 0;
+				var flash = new Pillar(x, y, FlxColor.YELLOW);
+				gameState.add(flash);
+			}
+		}
+	}
+
+	/**
+	 * Basic game loop function again!
+	 */
+	override public function update(elapsed:Float):Void {
+		frameCount++;
 
 		this.handleMovement();
-
+		this.handleAttack();
+		this.handleSpellcasting();
 		// Just like in PlayState, this is easy to forget but very important!
 		// Call this to automatically evaluate your velocity and position and stuff.
 		super.update(elapsed);
 	}
 
-	public function GetFollowPoint():FlxVector {
+	public override function GetFollowPoint():FlxVector {
 		return FlxG.mouse.getPosition();
 	}
 }

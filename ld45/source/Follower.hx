@@ -1,5 +1,6 @@
 package;
 
+import Agent.Faction_Enum;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.FlxG;
@@ -9,15 +10,13 @@ import flixel.math.FlxVector;
 import flixel.math.FlxRandom;
 
 class Follower extends Agent {
-	public var leader:Odin;
-
 	private var leaderOffset:FlxVector;
 
 	static private var rng:FlxRandom = new FlxRandom();
 	static private var kSpreadRange:Float = 80;
 	static private var kSpeed:Float = 40;
 
-	public function new(posx:Float, posy:Float) {
+	public function new(posx:Float, posy:Float, _faction:Faction_Enum = unset) {
 		super(posx, posy);
 		health = 100;
 		loadGraphic(AssetPaths.follower__png, true, 32, 32, true);
@@ -39,6 +38,7 @@ class Follower extends Agent {
 
 		state = Idle;
 		oldPosition = new FlxPoint(x, y);
+		setFaction(_faction);
 	}
 
 	override public function update(elapsed:Float):Void {
@@ -49,7 +49,7 @@ class Follower extends Agent {
 		if (leader != null) {
 			var followPoint:FlxVector = leader.GetFollowPoint();
 
-			if (leaderOffset == null) {
+			if (leaderOffset == null || rng.int(0, 300) == 0) {
 				leaderOffset = (new FlxVector(x - followPoint.x, y - followPoint.y)).normalize().scale(rng.float(5, kSpreadRange));
 			}
 
