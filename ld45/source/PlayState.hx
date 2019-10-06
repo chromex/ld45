@@ -33,6 +33,7 @@ class PlayState extends FlxState {
 	var water:FlxTilemap;
 	var doodads:FlxTilemap;
 	var fogGroup:FlxGroup = new FlxGroup();
+	var ravens:FlxGroup = new FlxGroup();
 
 	override public function create():Void {
 		super.create();
@@ -91,6 +92,8 @@ class PlayState extends FlxState {
 		} else if (entityName == "fog") {
 			var fog:Fog = new Fog(px, py);
 			fogGroup.add(fog);
+		} else if (entityName == "raven") {
+			ravens.add(new Raven(px, py));
 		}
 	}
 
@@ -108,5 +111,13 @@ class PlayState extends FlxState {
 		add(doodads);
 
 		map.loadEntities(PlaceEntities, "entities");
+
+		for (r in ravens)
+		{
+			var raven:Raven = cast(r, Raven);
+			raven.player = _player;
+		}
+
+		add(ravens);
 	}
 }
