@@ -13,11 +13,6 @@ import flixel.FlxG;
 class Odin extends Agent {
 	// TODO: figure out how to get the real framecount;
 	var frameCount = 0;
-	var movespeed = 50;
-	var attackRange = 30;
-	var spellRange = 100;
-	var playerDamage = 5;
-	var spellCooldown = 60;
 	var spellCooldownCounter = 60;
 
 	/**
@@ -33,11 +28,11 @@ class Odin extends Agent {
 		animation.add("walk", [for (i in 3...7) i], 12, true);
 		animation.add("attack", [for (i in 7...14) i], 12, false);
 		animation.add("dead", [20], 12, false);
-		mass = 100;
+		mass = GameConstants.Odin_Mass;
 		this.setSize(15, 15);
 		this.offset.x = 30;
 		this.offset.y = 60;
-		health = 100;
+		health = GameConstants.Odin_StartHealth;
 		setFaction(player);
 	}
 
@@ -68,8 +63,8 @@ class Odin extends Agent {
 		if (moving) {
 			setState(Walking);
 			var direction = Math.atan2(delta.x, delta.y);
-			velocity.x = -(Math.sin(direction)) * movespeed;
-			velocity.y = (Math.cos(direction)) * movespeed;
+			velocity.x = -(Math.sin(direction)) * GameConstants.Odin_Movespeed;
+			velocity.y = (Math.cos(direction)) * GameConstants.Odin_Movespeed;
 
 			facing = velocity.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
 
@@ -95,8 +90,8 @@ class Odin extends Agent {
 		if (state == Attacking) {
 			if (animation.frameIndex == 9) {
 				for (i in cast(FlxG.state, PlayState).enemyFollowers) {
-					if (cast(i.getPosition().subtract(x, y), FlxVector).length < attackRange) {
-						i.injure(playerDamage, this);
+					if (cast(i.getPosition().subtract(x, y), FlxVector).length < GameConstants.Odin_AttackRange) {
+						i.injure(GameConstants.Odin_Damage, this);
 					}
 				}
 			}
@@ -110,13 +105,13 @@ class Odin extends Agent {
 	}
 
 	private function handleSpellcasting():Void {
-		if (spellCooldownCounter < spellCooldown) {
+		if (spellCooldownCounter < GameConstants.Odin_SpellCooldown) {
 			spellCooldownCounter++;
 		} else {
 			if (FlxG.keys.anyPressed([E])) {
 				for (i in cast(FlxG.state, PlayState).agents) {
 					if (i.faction != null) {
-						if (cast(i.getPosition().subtract(x, y), FlxVector).length < spellRange) {
+						if (cast(i.getPosition().subtract(x, y), FlxVector).length < GameConstants.Odin_SpellRange) {
 							i.setLeader(this);
 						}
 					}
