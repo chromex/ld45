@@ -34,6 +34,7 @@ class PlayState extends FlxState {
 	var doodads:FlxTilemap;
 	var fogGroup:FlxGroup = new FlxGroup();
 	var ravens:FlxGroup = new FlxGroup();
+	var overlay:Overlay;
 
 	override public function create():Void {
 		super.create();
@@ -45,7 +46,7 @@ class PlayState extends FlxState {
 
 		FlxG.camera.zoom = 2;
 		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN_TIGHT, GameConstants.CameraLerp);
-		var overlay = new Overlay();
+		overlay = new Overlay();
 		add(overlay);
 		overlayCamera = new FlxCamera(0,0, 1280, 720, 1);
 		overlayCamera.bgColor = FlxColor.TRANSPARENT;
@@ -66,6 +67,10 @@ class PlayState extends FlxState {
 		agents.sort(FlxSort.byY);
 		FlxG.collide(agents, agents);
 		FlxG.collide(agents, terrain);
+
+		if (_player.IsDed()) {
+			overlay.showCredits();
+		}
 	}
 
 	private function PlaceEntities(entityName:String, entityData:Xml):Void {
