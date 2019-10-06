@@ -55,7 +55,8 @@ class PlayState extends FlxState {
 		}
 
 		for (i in 0...20) {
-			var follower:Follower = new Follower(rng.float(0, FlxG.width), rng.float(0, FlxG.height));
+			var spawnRange:Float = 50;
+			var follower:Follower = new Follower(_player.x + 50 + rng.float(-spawnRange, spawnRange), _player.y + rng.float(-spawnRange, spawnRange));
 			follower.leader = _player;
 			followers.add(follower);
 			agents.add(follower);
@@ -68,7 +69,9 @@ class PlayState extends FlxState {
 		super.update(elapsed);
 		agents.sort(FlxSort.byY);
 		FlxG.collide(followers, followers);
+		FlxG.collide(followers, terrain);
 		FlxG.collide(_player, followers);
+		FlxG.collide(_player, terrain);
 	}
 
 	private function PlaceEntities(entityName:String, entityData:Xml):Void {
@@ -80,6 +83,14 @@ class PlayState extends FlxState {
 			_player = new Odin(Std.parseInt(px), Std.parseInt(py));
 			agents.add(_player);
 		}
+		else if (entityName == "minion")
+		{
+			// RYDER SPAWN SHIT
+		}
+		else if (entityName == "leader")
+		{
+			// RYDER SPAWN MORE SHIT
+		}
 	}
 
 	private function LoadMap():Void {
@@ -87,9 +98,9 @@ class PlayState extends FlxState {
 		water = map.loadTilemap(AssetPaths.water__png, 16, 16, "water");
 		terrain = map.loadTilemap(AssetPaths.tileset__png, 16, 16, "terrain");
 		terrain.follow();
-		// terrain.setTileProperties(0, FlxObject.NONE);
-		// terrain.setTileProperties(5, FlxObject.ANY, null, null, 5);
-		// terrain.setTileProperties(10, FlxObject.NONE, null, null, 2);
+		terrain.setTileProperties(0, FlxObject.ANY, null, null, 256);
+		terrain.setTileProperties(17, FlxObject.NONE);
+		terrain.setTileProperties(97, FlxObject.NONE);
 		add(water);
 		add(terrain);
 
