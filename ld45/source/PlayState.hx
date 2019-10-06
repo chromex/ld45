@@ -75,7 +75,7 @@ class PlayState extends FlxState {
 	}
 
 	private function LoadMap():Void {
-		var map:FlxOgmoLoader = new FlxOgmoLoader(AssetPaths.island2__oel);
+		var map:FlxOgmoLoader = new FlxOgmoLoader(AssetPaths.island__oel);
 		water = map.loadTilemap(AssetPaths.water__png, 16, 16, "water");
 		terrain = map.loadTilemap(AssetPaths.tileset__png, 16, 16, "terrain");
 		terrain.follow();
