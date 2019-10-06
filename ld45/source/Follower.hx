@@ -1,12 +1,11 @@
 package;
 
+import GameConstants.SystemConstants;
 import Agent.Agent_State_ENUM;
 import Agent.Faction_Enum;
 import flixel.math.FlxPoint;
-import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.math.FlxVector;
 import flixel.math.FlxRandom;
 
@@ -14,10 +13,6 @@ class Follower extends Agent {
 	private var leaderOffset:FlxVector;
 
 	static private var rng:FlxRandom = new FlxRandom();
-	static private var kSpreadRange:Float = 80;
-	static private var kSpeed:Float = 40;
-
-	static private var detectionRange:Float = 1000;
 
 	public var target:Agent;
 
@@ -44,28 +39,28 @@ class Follower extends Agent {
 		this.offset.y = 20;
 
 		var rng:FlxRandom = new FlxRandom();
-		mass = rng.float(70, 90);
-		scale = new FlxPoint(mass / 90, mass / 90);
+		mass = rng.float(GameConstants.Follower_MassRange.x, GameConstants.Follower_MassRange.y);
+		scale = new FlxPoint(mass / GameConstants.Follower_MassRange.y, mass / GameConstants.Follower_MassRange.y);
 
 		state = Idle;
 		oldPosition = new FlxPoint(x, y);
-		aiCounter = rng.int(0, 30);
-		damage = mass / 100;
-		health = mass;
+		aiCounter = rng.int(0, SystemConstants.FOLLOWER_AI_DECISION_SPEED);
+		damage = mass / 100 * GameConstants.Follower_DamageMultiplier;
+		health = mass * GameConstants.Follower_HealthMultiplier;
 		setFaction(_faction);
 	}
 
 	private function handleAI() {
 		aiCounter--;
 		if (aiCounter < 0) {
-			aiCounter = 30;
+			aiCounter = SystemConstants.FOLLOWER_AI_DECISION_SPEED;
 			if (target == null) {
 				if (faction != unset) {
 					switch faction {
 						case player:
 							for (i in cast(FlxG.state, PlayState).enemyFollowers) {
-								if (Math.abs(i.x - x) < detectionRange) {
-									if (cast(i.getPosition().subtract(x, y), FlxVector).lengthSquared < detectionRange) {
+								if (Math.abs(i.x - x) < GameConstants.Follower_DetectionRange) {
+									if (cast(i.getPosition().subtract(x, y), FlxVector).lengthSquared < GameConstants.Follower_DetectionRange) {
 										target = i;
 										break;
 									}
@@ -73,8 +68,8 @@ class Follower extends Agent {
 							}
 						case enemy:
 							for (i in cast(FlxG.state, PlayState).followers) {
-								if (Math.abs(i.x - x) < detectionRange) {
-									if (cast(i.getPosition().subtract(x, y), FlxVector).lengthSquared < detectionRange) {
+								if (Math.abs(i.x - x) < GameConstants.Follower_DetectionRange) {
+									if (cast(i.getPosition().subtract(x, y), FlxVector).lengthSquared < GameConstants.Follower_DetectionRange) {
 										target = i;
 										break;
 									}
@@ -111,8 +106,8 @@ class Follower extends Agent {
 				if (leader != null) {
 					followPoint = leader.GetFollowPoint();
 
-					if (leaderOffset == null || rng.int(0, 300) == 0) {
-						leaderOffset = (new FlxVector(x - followPoint.x, y - followPoint.y)).normalize().scale(rng.float(5, kSpreadRange));
+					if (leaderOffset == null || rng.int(0, GameConstants.Follower_Restlessness * 60) == 0) {
+						leaderOffset = (new FlxVector(x - followPoint.x, y - followPoint.y)).normalize().scale(rng.float(5, GameConstants.Follower_ClumpSize));
 					}
 
 					followPoint.addPoint(leaderOffset);
@@ -126,12 +121,12 @@ class Follower extends Agent {
 			} else {
 				facing = target.x > x ? FlxObject.LEFT : FlxObject.RIGHT;
 			}
-			
-			if (heading.length < (kSpeed * elapsed)) {
+
+			if (heading.length < (GameConstants.Follower_MoveSpeed * elapsed)) {
 				x = followPoint.x;
 				y = followPoint.y;
 			} else {
-				var maxStep:FlxVector = heading.normalize().scale(elapsed * kSpeed);
+				var maxStep:FlxVector = heading.normalize().scale(elapsed * GameConstants.Follower_MoveSpeed);
 				x = x + maxStep.x;
 				y = y + maxStep.y;
 			}

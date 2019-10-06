@@ -56,12 +56,6 @@ class PlayState extends FlxState {
 
 		FlxG.camera.bgColor = 0x2f2e36;
 
-		for (i in 0...20) {
-			var follower:Follower = new Follower(rng.float(FlxG.width / -2, FlxG.width / 2), rng.float(FlxG.height / -2, FlxG.height / 2));
-			follower.mass = 30;
-			agents.add(follower);
-		}
-
 		add(agents);
 		add(fogGroup);
 	}
@@ -82,9 +76,9 @@ class PlayState extends FlxState {
 			_player = new Odin(px, py);
 			agents.add(_player);
 		} else if (entityName == "minion") {
-			for (i in 0...3) {
+			for (i in 0...1) {
 				var spawnRange:Float = 50;
-				var follower:Follower = new Follower(px + 50 + rng.float(-spawnRange, spawnRange), py + rng.float(-spawnRange, spawnRange), enemy);
+				var follower:Follower = new Follower(px + 50 + rng.float(-spawnRange, spawnRange), py + rng.float(-spawnRange, spawnRange), unset);
 				agents.add(follower);
 			}
 		} else if (entityName == "leader") {

@@ -116,8 +116,8 @@ class Agent extends FlxSprite {
 				if (color != OriginColor) {
 					color = OriginColor;
 				}
-			} else if (color != FlxColor.WHITE) {
-				color = FlxColor.WHITE;
+			} else if (color != FlxColor.GRAY) {
+				color = FlxColor.GRAY;
 			}
 		}
 	}
