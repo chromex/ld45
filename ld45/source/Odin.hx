@@ -12,6 +12,7 @@ class Odin extends Agent {
 	// TODO: figure out how to get the real framecount;
 	var frameCount = 0;
 	var movespeed = 50;
+	var attackRange = 50;
 
 	/**
 	 * Constructor for the player - just initializing a simple sprite using a graphic.
@@ -58,15 +59,6 @@ class Odin extends Agent {
 			moving = true;
 		}
 
-		if (FlxG.keys.anyPressed([SPACE])) {
-			setState(Attacking);
-		}
-
-		if (state == Attacking && animation.frameIndex == 13) {
-			state = Walking;
-			setState(Idle);
-		}
-
 		if (moving) {
 			setState(Walking);
 			var direction = Math.atan2(delta.x, delta.y);
@@ -78,7 +70,7 @@ class Odin extends Agent {
 			if (frameCount % 10 == 0) {
 				var footDust = new Footdust();
 				footDust.x = x + 10;
-				footDust.y = y + 20;
+				footDust.y = y + 5;
 				FlxG.state.add(footDust);
 			}
 		} else {
@@ -91,6 +83,27 @@ class Odin extends Agent {
 	 */
 	override public function update(elapsed:Float):Void {
 		frameCount++;
+
+		if (FlxG.keys.anyPressed([SPACE])) {
+			if (state != Attacking) {
+				setState(Attacking);
+			}
+		}
+
+		if (state == Attacking) {
+			if (animation.frameIndex == 9 || animation.frameIndex == 8 || animation.frameIndex == 7) {
+				for (i in cast(FlxG.state, PlayState).followers) {
+					if (cast(i.getPosition().subtract(x, y), FlxVector).length < attackRange) {
+						i.hurt(1);
+					}
+				}
+			}
+			if (animation.frameIndex == 13) {
+				// hack to get out of teh Attack state
+				state = Walking;
+				setState(Idle);
+			}
+		}
 
 		this.handleMovement();
 

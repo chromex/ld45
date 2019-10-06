@@ -22,8 +22,8 @@ class PlayState extends FlxState {
 
 	var overlayCamera:FlxCamera;
 
-	var followers:FlxTypedGroup<Follower>;
-	var agents:FlxTypedGroup<FlxSprite>;
+	public var followers:FlxTypedGroup<Follower>;
+	public var agents:FlxTypedGroup<FlxSprite>;
 
 	var rng:FlxRandom;
 

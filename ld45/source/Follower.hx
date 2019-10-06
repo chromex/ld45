@@ -19,7 +19,7 @@ class Follower extends Agent {
 
 	public function new(posx:Float, posy:Float) {
 		super(posx, posy);
-
+		health = 100;
 		loadGraphic(AssetPaths.follower__png, true, 32, 32, true);
 
 		animation.add("idle", [for (i in 0...11) i], 12, true);

@@ -39,7 +39,7 @@ class Agent extends FlxSprite {
 				case Walking:
 					animation.play("walk", true, false, -1);
 				case Attacking:
-					animation.play("attack", true, false, -1);
+					animation.play("attack", true, false);
 			}
 		}
 	}
