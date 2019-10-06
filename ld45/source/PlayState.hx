@@ -77,17 +77,17 @@ class PlayState extends FlxState {
 			_player = new Odin(px, py);
 			agents.add(_player);
 		} else if (entityName == "minion") {
-			for (i in 0...1) {
+			for (i in 0...2) {
 				var spawnRange:Float = 50;
 				var follower:Follower = new Follower(px + 50 + rng.float(-spawnRange, spawnRange), py + rng.float(-spawnRange, spawnRange), unset);
 				agents.add(follower);
 			}
 		} else if (entityName == "leader") {
 			// for (i in 0...6) {
-			// 	var spawnRange:Float = 50;
-			// 	var follower:Follower = new Follower(px + 50 + rng.float(-spawnRange, spawnRange), py + rng.float(-spawnRange, spawnRange));
-			// 	agents.add(follower);
-			// 	follower.setFaction(enemy);
+				var spawnRange:Float = 50;
+				var leader:Leader = new Leader(px + 50 + rng.float(-spawnRange, spawnRange), py + rng.float(-spawnRange, spawnRange));
+				agents.add(leader);
+				leader.setFaction(enemy);
 			// }
 		} else if (entityName == "fog") {
 			var fog:Fog = new Fog(px, py);

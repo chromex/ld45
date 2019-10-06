@@ -34,11 +34,18 @@ class Agent extends FlxSprite {
 	private var damageCounter:Float = 0;
 	private var gameState:PlayState;
 
+	public var numFollowers:Int = 1;
+
 	public var OriginColor:FlxColor = FlxColor.GRAY;
 
 	public function setLeader(newLeader:Agent, overrideCurrentLeader:Bool = false) {
 		if (leader == null || overrideCurrentLeader) {
+			if (leader != null) {
+				leader.numFollowers--;
+			}
+
 			leader = newLeader;
+			leader.numFollowers++;
 			setFaction(leader.faction);
 		}
 	}
@@ -53,7 +60,10 @@ class Agent extends FlxSprite {
 				case enemy:
 					OriginColor = FlxColor.RED;
 					gameState.enemyFollowers.add(this);
-				default:
+				case unset:
+					OriginColor = FlxColor.GRAY;
+					gameState.enemyFollowers.remove(this);
+					gameState.followers.remove(this);
 			}
 		} else {
 			if (faction != newFaction) {
@@ -66,7 +76,10 @@ class Agent extends FlxSprite {
 						OriginColor = FlxColor.RED;
 						gameState.enemyFollowers.add(this);
 						gameState.followers.remove(this);
-					default:
+					case unset:
+						OriginColor = FlxColor.GRAY;
+						gameState.enemyFollowers.remove(this);
+						gameState.followers.remove(this);
 				}
 
 				faction = newFaction;
@@ -92,8 +105,8 @@ class Agent extends FlxSprite {
 			state = Idle;
 			gameState.followers.remove(this);
 			gameState.enemyFollowers.remove(this);
-			setSize(1,1);
-			
+			setSize(1, 1);
+
 			setState(Dead);
 		} else {
 			damageCounter = 3;
@@ -122,7 +135,7 @@ class Agent extends FlxSprite {
 		}
 	}
 
-	private function setState(newState:Agent_State_ENUM, overrideState: Bool = false):Void {
+	private function setState(newState:Agent_State_ENUM, overrideState:Bool = false):Void {
 		if (state != newState && (state != Attacking || overrideState)) {
 			state = newState;
 			switch newState {

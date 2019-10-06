@@ -110,7 +110,7 @@ class Odin extends Agent {
 		} else {
 			if (FlxG.keys.anyPressed([E])) {
 				for (i in cast(FlxG.state, PlayState).agents) {
-					if (i.faction != null) {
+					if (i.faction == Faction_Enum.unset) {
 						if (cast(i.getPosition().subtract(x, y), FlxVector).length < GameConstants.Odin_SpellRange) {
 							i.setLeader(this);
 						}
