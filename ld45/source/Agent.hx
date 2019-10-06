@@ -43,9 +43,7 @@ class Agent extends FlxSprite {
 	}
 
 	public function setFaction(newFaction:Faction_Enum) {
-		FlxG.log.add("CURRENT FACTION: " + faction +"  INCOMING FACTION: " + newFaction);
 		if (faction == unset) {
-			FlxG.log.add("FACTION IS NULL" + faction);
 			faction = newFaction;
 			switch newFaction {
 				case player:
@@ -58,7 +56,6 @@ class Agent extends FlxSprite {
 			}
 		} else {
 			if (faction != newFaction) {
-				FlxG.log.add("FACTION WAS NOT NULL, SETTING" + newFaction);
 				switch newFaction {
 					case player:
 						OriginColor = FlxColor.WHITE;
@@ -72,8 +69,6 @@ class Agent extends FlxSprite {
 				}
 
 				faction = newFaction;
-			} else {
-				FlxG.log.add("FACTION WAS NOT NULL, BUT SAME" + faction);
 			}
 		}
 	}

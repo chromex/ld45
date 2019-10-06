@@ -16,6 +16,14 @@ class Follower extends Agent {
 	static private var kSpreadRange:Float = 80;
 	static private var kSpeed:Float = 40;
 
+	static private var detectionRange:Float = 1000;
+
+	public var target:Agent;
+
+	var aiCounter:Int;
+
+	var damage:Float;
+
 	public function new(posx:Float, posy:Float, _faction:Faction_Enum = unset) {
 		super(posx, posy);
 		health = 100;
@@ -38,40 +46,89 @@ class Follower extends Agent {
 
 		state = Idle;
 		oldPosition = new FlxPoint(x, y);
+		aiCounter = rng.int(0, 30);
+		damage = mass / 9;
 		setFaction(_faction);
+	}
+
+	private function handleAI() {
+		aiCounter--;
+		if (aiCounter < 0) {
+			aiCounter = 30;
+			if (target == null) {
+				if (faction != unset) {
+					switch faction {
+						case player:
+							for (i in cast(FlxG.state, PlayState).enemyFollowers) {
+								if (Math.abs(i.x - x) < detectionRange) {
+									if (cast(i.getPosition().subtract(x, y), FlxVector).lengthSquared < detectionRange) {
+										target = i;
+										break;
+									}
+								}
+							}
+						case enemy:
+							for (i in cast(FlxG.state, PlayState).followers) {
+								if (Math.abs(i.x - x) < detectionRange) {
+									if (cast(i.getPosition().subtract(x, y), FlxVector).lengthSquared < detectionRange) {
+										target = i;
+										break;
+									}
+								}
+							}
+						default:
+					}
+				}
+			}
+		}
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
+		handleAI();
 		velocity.x *= .9;
 		velocity.y *= .9;
+		var heading:FlxVector = new FlxVector(x, y);
+		var followPoint:FlxVector = new FlxVector(x, y);
 
-		if (leader != null) {
-			var followPoint:FlxVector = leader.GetFollowPoint();
+		if (target != null) {
+			followPoint = target.getPosition();
+		} else {
+			if (leader != null) {
+				followPoint = leader.GetFollowPoint();
 
-			if (leaderOffset == null || rng.int(0, 300) == 0) {
-				leaderOffset = (new FlxVector(x - followPoint.x, y - followPoint.y)).normalize().scale(rng.float(5, kSpreadRange));
+				if (leaderOffset == null || rng.int(0, 300) == 0) {
+					leaderOffset = (new FlxVector(x - followPoint.x, y - followPoint.y)).normalize().scale(rng.float(5, kSpreadRange));
+				}
+
+				followPoint.addPoint(leaderOffset);
 			}
+		}
 
-			followPoint.addPoint(leaderOffset);
-			var heading:FlxVector = followPoint.subtractNew(new FlxVector(x, y));
+		heading = followPoint.subtractNew(new FlxVector(x, y));
 
-			facing = heading.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
+		facing = heading.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
 
-			if (heading.length < (kSpeed * elapsed)) {
-				x = followPoint.x;
-				y = followPoint.y;
-			} else {
-				var maxStep:FlxVector = heading.normalize().scale(elapsed * kSpeed);
-				x = x + maxStep.x;
-				y = y + maxStep.y;
-			}
+		if (heading.length < (kSpeed * elapsed)) {
+			x = followPoint.x;
+			y = followPoint.y;
+		} else {
+			var maxStep:FlxVector = heading.normalize().scale(elapsed * kSpeed);
+			x = x + maxStep.x;
+			y = y + maxStep.y;
 		}
 
 		if (Math.abs(x - oldPosition.x) > .5 || Math.abs(y - oldPosition.y) > .5) {
 			setState(Walking);
 		} else {
-			setState(Idle);
+			if (target != null) {
+				if (animation.frameIndex == 24) { 
+					target.injure(damage, this);
+				}
+				setState(Attacking);
+			} else {
+				setState(Idle);
+			}
 		}
 
 		oldPosition = new FlxPoint(x, y);
