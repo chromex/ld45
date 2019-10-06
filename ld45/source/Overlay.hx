@@ -17,7 +17,7 @@ class Overlay extends FlxGroup {
 		overlay = new FlxSprite(position.x, position.y, "assets/sprites/overlay.png");
 		title = new FlxSprite(-440, -760, "assets/sprites/FOO_Title.png");
 		title.scale.set(4,4);
-		title.alpha = 0.85;
+		title.alpha = 1;
 
 		add(overlay);
 		add(title);

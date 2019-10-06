@@ -57,6 +57,7 @@ class Agent extends FlxSprite {
 				case player:
 					OriginColor = FlxColor.WHITE;
 					gameState.followers.add(this);
+					++Stats.frens;
 				case enemy:
 					OriginColor = FlxColor.RED;
 					gameState.enemyFollowers.add(this);
@@ -72,6 +73,7 @@ class Agent extends FlxSprite {
 						OriginColor = FlxColor.WHITE;
 						gameState.followers.add(this);
 						gameState.enemyFollowers.remove(this);
+						++Stats.frens;
 					case enemy:
 						OriginColor = FlxColor.RED;
 						gameState.enemyFollowers.add(this);
@@ -147,6 +149,7 @@ class Agent extends FlxSprite {
 					animation.play("attack", true, false);
 				case Dead:
 					animation.play("dead", true, false);
+					OnDed();
 				default:
 			}
 		}
@@ -158,5 +161,8 @@ class Agent extends FlxSprite {
 
 	public function IsDed():Bool {
 		return state == Dead;
+	}
+
+	public function OnDed():Void {
 	}
 }

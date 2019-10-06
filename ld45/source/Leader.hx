@@ -156,4 +156,8 @@ class Leader extends Agent {
 			oldPosition = new FlxPoint(x, y);
 		}
 	}
+	
+	public override function OnDed():Void {
+		Stats.kills += 1;
+	}
 }

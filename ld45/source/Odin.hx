@@ -92,6 +92,7 @@ class Odin extends Agent {
 				for (i in cast(FlxG.state, PlayState).enemyFollowers) {
 					if (cast(i.getPosition().subtract(x, y), FlxVector).length < GameConstants.Odin_AttackRange) {
 						i.injure(GameConstants.Odin_Damage, this);
+						Stats.dmg += GameConstants.Odin_Damage;
 					}
 				}
 			}
