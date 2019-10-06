@@ -1,5 +1,6 @@
 package;
 
+import Agent.Agent_State_ENUM;
 import Agent.Faction_Enum;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
@@ -32,6 +33,8 @@ class Follower extends Agent {
 		animation.add("idle", [for (i in 0...11) i], 12, true);
 		animation.add("attack", [for (i in 12...25) i], 12, true);
 		animation.add("walk", [for (i in 26...32) i], 18, true);
+		animation.add("dead", [32], 18, true);
+
 		animation.play("idle", true, false, -1);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
@@ -47,7 +50,8 @@ class Follower extends Agent {
 		state = Idle;
 		oldPosition = new FlxPoint(x, y);
 		aiCounter = rng.int(0, 30);
-		damage = mass / 9;
+		damage = mass / 100;
+		health = mass;
 		setFaction(_faction);
 	}
 
@@ -85,52 +89,69 @@ class Follower extends Agent {
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
-		handleAI();
 		velocity.x *= .9;
 		velocity.y *= .9;
-		var heading:FlxVector = new FlxVector(x, y);
-		var followPoint:FlxVector = new FlxVector(x, y);
+		if (state != Dead) {
+			handleAI();
 
-		if (target != null) {
-			followPoint = target.getPosition();
-		} else {
-			if (leader != null) {
-				followPoint = leader.GetFollowPoint();
+			var heading:FlxVector = new FlxVector(x, y);
+			var followPoint:FlxVector = new FlxVector(x, y);
 
-				if (leaderOffset == null || rng.int(0, 300) == 0) {
-					leaderOffset = (new FlxVector(x - followPoint.x, y - followPoint.y)).normalize().scale(rng.float(5, kSpreadRange));
-				}
-
-				followPoint.addPoint(leaderOffset);
-			}
-		}
-
-		heading = followPoint.subtractNew(new FlxVector(x, y));
-
-		facing = heading.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
-
-		if (heading.length < (kSpeed * elapsed)) {
-			x = followPoint.x;
-			y = followPoint.y;
-		} else {
-			var maxStep:FlxVector = heading.normalize().scale(elapsed * kSpeed);
-			x = x + maxStep.x;
-			y = y + maxStep.y;
-		}
-
-		if (Math.abs(x - oldPosition.x) > .5 || Math.abs(y - oldPosition.y) > .5) {
-			setState(Walking);
-		} else {
 			if (target != null) {
-				if (animation.frameIndex == 24) { 
-					target.injure(damage, this);
+				if (target.state == Agent_State_ENUM.Dead || target.faction == faction) {
+					target = null;
+					setState(Idle, true);
+				} else {
+					followPoint = target.getPosition();
+					if (new FlxVector(x - followPoint.x, y - followPoint.y).length < 20) {
+						followPoint = getPosition();
+					}
 				}
-				setState(Attacking);
 			} else {
-				setState(Idle);
-			}
-		}
+				if (leader != null) {
+					followPoint = leader.GetFollowPoint();
 
-		oldPosition = new FlxPoint(x, y);
+					if (leaderOffset == null || rng.int(0, 300) == 0) {
+						leaderOffset = (new FlxVector(x - followPoint.x, y - followPoint.y)).normalize().scale(rng.float(5, kSpreadRange));
+					}
+
+					followPoint.addPoint(leaderOffset);
+				}
+			}
+
+			heading = followPoint.subtractNew(new FlxVector(x, y));
+
+			if (target == null) {
+				facing = heading.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
+			} else {
+				facing = target.x > x ? FlxObject.LEFT : FlxObject.RIGHT;
+			}
+			
+			if (heading.length < (kSpeed * elapsed)) {
+				x = followPoint.x;
+				y = followPoint.y;
+			} else {
+				var maxStep:FlxVector = heading.normalize().scale(elapsed * kSpeed);
+				x = x + maxStep.x;
+				y = y + maxStep.y;
+			}
+
+			if (Math.abs(x - oldPosition.x) > .5 || Math.abs(y - oldPosition.y) > .5) {
+				setState(Walking);
+			} else {
+				if (target != null) {
+					if (heading.length < 3) {
+						if (animation.frameIndex == 24) {
+							target.injure(damage, this);
+						}
+						setState(Attacking);
+					}
+				} else {
+					setState(Idle);
+				}
+			}
+
+			oldPosition = new FlxPoint(x, y);
+		}
 	}
 }

@@ -13,6 +13,7 @@ enum Agent_State_ENUM {
 	Walking;
 	Attacking;
 	Casting;
+	Dead;
 }
 
 enum Faction_Enum {
@@ -87,7 +88,17 @@ class Agent extends FlxSprite {
 
 	public function injure(damage:Float, origin:Agent) {
 		health -= damage;
-		damageCounter = 3;
+		if (health < 0) {
+			state = Idle;
+			gameState.followers.remove(this);
+			gameState.enemyFollowers.remove(this);
+			setSize(1,1);
+			
+			setState(Dead);
+		} else {
+			damageCounter = 3;
+		}
+
 		var deltaFromOrigin:FlxVector = cast(this.getPosition(), FlxVector).subtract(origin.x, origin.y);
 		velocity.x += deltaFromOrigin.x;
 		velocity.y += deltaFromOrigin.y;
@@ -111,8 +122,8 @@ class Agent extends FlxSprite {
 		}
 	}
 
-	private function setState(newState:Agent_State_ENUM):Void {
-		if (state != newState && state != Attacking) {
+	private function setState(newState:Agent_State_ENUM, overrideState: Bool = false):Void {
+		if (state != newState && (state != Attacking || overrideState)) {
 			state = newState;
 			switch newState {
 				case Idle:
@@ -121,6 +132,8 @@ class Agent extends FlxSprite {
 					animation.play("walk", true, false, -1);
 				case Attacking:
 					animation.play("attack", true, false);
+				case Dead:
+					animation.play("dead", true, false);
 				default:
 			}
 		}
