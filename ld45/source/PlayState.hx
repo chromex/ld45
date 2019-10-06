@@ -43,13 +43,13 @@ class PlayState extends FlxState {
 
 		FlxG.camera.zoom = 2;
 		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN_TIGHT, GameConstants.CameraLerp);
-
-		// overlayCamera = new FlxCamera(0,0, FlxG.width, FlxG.height, 1);
-		// overlayCamera.bgColor = FlxColor.TRANSPARENT;
-		// var overlay = new FlxSprite(0,0,"assets/sprites/overlay.png");
-		// add(overlay);
-		// overlayCamera.follow(overlay);
-		// FlxG.cameras.add(overlayCamera);
+		var overlay = new Overlay();
+		add(overlay);
+		overlayCamera = new FlxCamera(0,0, 1280, 720, 1);
+		overlayCamera.bgColor = FlxColor.TRANSPARENT;
+		
+		overlayCamera.follow(overlay.overlay, FlxCameraFollowStyle.NO_DEAD_ZONE);
+		FlxG.cameras.add(overlayCamera);
 
 		rng = new FlxRandom(3);
 
