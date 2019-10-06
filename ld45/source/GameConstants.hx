@@ -27,7 +27,7 @@ class GameConstants {
 
 	static public var Leader_DamageMultiplier:Float = 1;
 	static public var Leader_Damage:Float = 3;
-	static public var Leader_HealthMultiplier:Float = .1;
+	static public var Leader_HealthMultiplier:Float = 1;
 
 	static public var Leader_DetectionRange:Float = 3000;
 

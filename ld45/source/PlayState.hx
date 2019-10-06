@@ -71,6 +71,10 @@ class PlayState extends FlxState {
 		if (_player.IsDed()) {
 			overlay.showCredits();
 		}
+
+		if (enemyFollowers.length == 0 && _player.state != Dead) {
+			_player.setState(Dead, true);
+		}
 	}
 
 	private function PlaceEntities(entityName:String, entityData:Xml):Void {

@@ -29,7 +29,7 @@ class Agent extends FlxSprite {
 
 	public var faction:Faction_Enum;
 
-	private var state:Agent_State_ENUM;
+	public var state:Agent_State_ENUM;
 	private var oldPosition:FlxPoint;
 	private var damageCounter:Float = 0;
 	private var gameState:PlayState;
@@ -63,8 +63,8 @@ class Agent extends FlxSprite {
 					gameState.enemyFollowers.add(this);
 				case unset:
 					OriginColor = FlxColor.GRAY;
-					gameState.enemyFollowers.remove(this);
-					gameState.followers.remove(this);
+					gameState.enemyFollowers.remove(this, true);
+					gameState.followers.remove(this, true);
 			}
 		} else {
 			if (faction != newFaction) {
@@ -72,16 +72,16 @@ class Agent extends FlxSprite {
 					case player:
 						OriginColor = FlxColor.WHITE;
 						gameState.followers.add(this);
-						gameState.enemyFollowers.remove(this);
+						gameState.enemyFollowers.remove(this, true);
 						++Stats.frens;
 					case enemy:
 						OriginColor = FlxColor.RED;
 						gameState.enemyFollowers.add(this);
-						gameState.followers.remove(this);
+						gameState.followers.remove(this, true);
 					case unset:
 						OriginColor = FlxColor.GRAY;
-						gameState.enemyFollowers.remove(this);
-						gameState.followers.remove(this);
+						gameState.enemyFollowers.remove(this, true);
+						gameState.followers.remove(this, true);
 				}
 
 				faction = newFaction;
@@ -105,8 +105,9 @@ class Agent extends FlxSprite {
 		health -= damage;
 		if (health < 0) {
 			state = Idle;
-			gameState.followers.remove(this);
-			gameState.enemyFollowers.remove(this);
+			gameState.followers.remove(this, true);
+			gameState.enemyFollowers.remove(this, true);
+			FlxG.log.add(gameState.enemyFollowers.length);
 			setSize(1, 1);
 
 			setState(Dead);
@@ -137,7 +138,7 @@ class Agent extends FlxSprite {
 		}
 	}
 
-	private function setState(newState:Agent_State_ENUM, overrideState:Bool = false):Void {
+	public function setState(newState:Agent_State_ENUM, overrideState:Bool = false):Void {
 		if (state != newState && (state != Attacking || overrideState)) {
 			state = newState;
 			switch newState {
