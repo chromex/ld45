@@ -23,6 +23,7 @@ class PlayState extends FlxState {
 	var overlayCamera:FlxCamera;
 
 	var followers:FlxTypedGroup<Follower>;
+	var agents:FlxTypedGroup<FlxSprite>;
 
 	var rng:FlxRandom;
 
@@ -32,6 +33,7 @@ class PlayState extends FlxState {
 	override public function create():Void {
 		super.create();
 
+		agents = new FlxTypedGroup();
 		LoadMap();
 
 		FlxG.camera.zoom = 2;
@@ -49,20 +51,22 @@ class PlayState extends FlxState {
 			follower.mass = 30;
 			follower.color = FlxColor.RED;
 			followers.add(follower);
+			agents.add(follower);
 		}
 
 		for (i in 0...20) {
 			var follower:Follower = new Follower(rng.float(0, FlxG.width), rng.float(0, FlxG.height));
 			follower.leader = _player;
 			followers.add(follower);
+			agents.add(follower);
 		}
 
-		add(followers);
+		add(agents);
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
-		followers.sort(FlxSort.byY);
+		agents.sort(FlxSort.byY);
 		FlxG.collide(followers, followers);
 		FlxG.collide(_player, followers);
 	}
@@ -74,7 +78,7 @@ class PlayState extends FlxState {
 		if (entityName == "player")
 		{
 			_player = new Odin(Std.parseInt(px), Std.parseInt(py));
-			add(_player);
+			agents.add(_player);
 		}
 	}
 

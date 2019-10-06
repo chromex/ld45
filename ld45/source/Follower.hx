@@ -20,27 +20,35 @@ class Follower extends FlxSprite {
 	private var leaderOffset:FlxVector;
 
 	static private var rng:FlxRandom = new FlxRandom();
-	static private var kSpreadRange:Float = 40;
+	static private var kSpreadRange:Float = 80;
 	static private var kSpeed:Float = 40;
 
 	private var state:Follower_State_ENUM;
 
+	private var oldPosition:FlxPoint;
+
 	public function new(posx:Float, posy:Float) {
 		super(posx, posy);
+
 		loadGraphic(AssetPaths.follower__png, true, 32, 32, true);
+
 		animation.add("idle", [for (i in 0...11) i], 12, true);
 		animation.add("attack", [for (i in 12...25) i], 12, true);
 		animation.add("walk", [for (i in 26...32) i], 18, true);
 		animation.play("idle", true, false, -1);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
+
 		this.setSize(15, 15);
 		this.offset.x = 10;
 		this.offset.y = 20;
+
 		var rng:FlxRandom = new FlxRandom();
 		mass = rng.float(70, 90);
 		scale = new FlxPoint(mass / 90, mass / 90);
+
 		state = Idle;
+		oldPosition = new FlxPoint(x, y);
 	}
 
 	private function setState(newState:Follower_State_ENUM):Void {
@@ -75,15 +83,21 @@ class Follower extends FlxSprite {
 			facing = heading.x > 0 ? FlxObject.LEFT : FlxObject.RIGHT;
 
 			if (heading.length < (kSpeed * elapsed)) {
-				setState(Idle);
 				x = followPoint.x;
 				y = followPoint.y;
 			} else {
-				setState(Walking);
 				var maxStep:FlxVector = heading.normalize().scale(elapsed * kSpeed);
 				x = x + maxStep.x;
 				y = y + maxStep.y;
 			}
 		}
+
+		if (Math.abs(x - oldPosition.x) > .5 || Math.abs(y - oldPosition.y) > .5) {
+			setState(Walking);
+		} else {
+			setState(Idle);
+		}
+
+		oldPosition = new FlxPoint(x, y);
 	}
 }

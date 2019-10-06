@@ -22,8 +22,8 @@ class Odin extends FlxSprite {
 		// This initializes this sprite object with the graphic of the ship and
 		// positions it in the middle of the screen.
 
-		loadGraphic(AssetPaths.odin__png, true, 32, 32);
-		animation.add("idle", [0, 1], 2, true);
+		loadGraphic(AssetPaths.odin__png, true, 70, 70);
+		animation.add("idle", [for (i in 0...11) i], 12, true);
 		animation.play("idle");
 		mass = 100;
 	}
