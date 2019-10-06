@@ -30,11 +30,11 @@ class GameConstants {
 	static public var Leader_HealthMultiplier:Float = .1;
 
 	static public var Leader_DetectionRange:Float = 3000;
-	
+
 	static public var Leader_SpellRange:Float = 400;
 
 	static public var Leader_ClumpSize:Float = 80;
-	static public var Leader_FollowerScaleMultiplier:Float = 1;
+	static public var Leader_FollowerScaleMultiplier:Float = 1.2;
 
 	/*
 		___________ _____ _   _
@@ -54,7 +54,7 @@ class GameConstants {
 	static public var Odin_StartHealth:Float = 100;
 	static public var Odin_Mass:Float = 100;
 
-	static public var Odin_FollowerScaleMultiplier:Float = 1;
+	static public var Odin_FollowerScaleMultiplier:Float = 1.5;
 
 	/* QUOTH THE RAVEN */
 	static public var RAVEN_FLEERANGE:Float = 2000;

@@ -45,7 +45,7 @@ class PlayState extends FlxState {
 		LoadMap();
 
 		FlxG.camera.zoom = 2;
-		FlxG.camera.follow(_player, FlxCameraFollowStyle.TOPDOWN_TIGHT, GameConstants.CameraLerp);
+		FlxG.camera.follow(_player, FlxCameraFollowStyle.LOCKON, GameConstants.CameraLerp);
 		overlay = new Overlay();
 		add(overlay);
 		overlayCamera = new FlxCamera(0,0, 1280, 720, 1);
