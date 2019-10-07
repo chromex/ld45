@@ -35,6 +35,7 @@ class PlayState extends FlxState {
 	var fogGroup:FlxGroup = new FlxGroup();
 	var ravens:FlxGroup = new FlxGroup();
 	var overlay:Overlay;
+	public var tombstones = new FlxTypedGroup<Tombstone>();
 
 	override public function create():Void {
 		super.create();
@@ -103,6 +104,8 @@ class PlayState extends FlxState {
 			fogGroup.add(fog);
 		} else if (entityName == "raven") {
 			ravens.add(new Raven(px, py));
+		} else if (entityName == "tombstone") {
+			tombstones.add(new Tombstone(px, py));
 		}
 	}
 
@@ -130,6 +133,7 @@ class PlayState extends FlxState {
 			raven.player = _player;
 		}
 
+		add(tombstones);
 		add(ravens);
 	}
 }

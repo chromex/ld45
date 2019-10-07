@@ -96,6 +96,13 @@ class Odin extends Agent {
 						Stats.dmg += GameConstants.Odin_Damage;
 					}
 				}
+
+				for (i in cast(FlxG.state, PlayState).tombstones) {
+					if (i.alive && cast(i.getPosition().subtract(x, y), FlxVector).length < GameConstants.Odin_AttackRange) {
+						i.krak();
+						health = Math.min(health + GameConstants.Odin_HealthPerKrak, GameConstants.Odin_StartHealth);
+					}
+				}
 			}
 
 			if (animation.frameIndex == 13) {

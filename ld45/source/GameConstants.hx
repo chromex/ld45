@@ -56,6 +56,8 @@ class GameConstants {
 
 	static public var Odin_FollowerScaleMultiplier:Float = 0.5;
 
+	static public var Odin_HealthPerKrak:Float = 25;
+
 	/* QUOTH THE RAVEN */
 	static public var RAVEN_FLEERANGE:Float = 2000;
 	static public var RAVEN_VELOCITY:Float = 30;
