@@ -26,7 +26,7 @@ class Overlay extends FlxGroup {
 		healthBar = new FlxSprite(-600, -350);
 		healthBar.makeGraphic(400, 30, FlxColor.RED);
 		add(healthBar);
-		title.scale.set(4,4);
+		title.scale.set(4, 4);
 		title.alpha = 1;
 
 		add(overlay);
@@ -60,16 +60,18 @@ class Overlay extends FlxGroup {
 			var sentiment:String;
 			if (skore < 0) {
 				sentiment = "SAD";
-			} else if (skore < 100) {
+			} else if (skore < 400) {
 				sentiment = "meh";
-			} else if (skore < 200) {
+			} else if (skore < 600) {
 				sentiment = "bleh";
-			} else if (skore < 300) {
+			} else if (skore < 800) {
 				sentiment = "okaaay";
 			} else {
-				sentiment = "GODHOOD";
+				sentiment = "__GODHOOD__${SKORE->value % 3}";
 			}
+			var globalScoreCount = Date.now().getMinutes() + 22000;
 			add(new FlxText(-570, -370, 0, "GOD SKORE: " + Std.int(skore) + " ... " + sentiment, 32));
+			add(new FlxText(-600, -430, 0, "Global Scores Submitted: " + Std.int(globalScoreCount), 24));
 		}
 	}
 }

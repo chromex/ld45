@@ -27,6 +27,7 @@ class Odin extends Agent {
 		animation.add("idle", [for (i in 0...2) i], 2, true);
 		animation.add("walk", [for (i in 3...7) i], 12, true);
 		animation.add("attack", [for (i in 7...14) i], 12, false);
+		animation.add("spell", [for (i in 15...19) i], 8, false);
 		animation.add("dead", [20], 12, false);
 		mass = GameConstants.Odin_Mass;
 		this.setSize(15, 15);
@@ -118,10 +119,13 @@ class Odin extends Agent {
 			spellCooldownCounter++;
 		} else {
 			if (FlxG.keys.anyPressed([E])) {
+				animation.play("spell", true);
 				for (i in cast(FlxG.state, PlayState).agents) {
 					if (i.faction == Faction_Enum.unset) {
 						if (cast(i.getPosition().subtract(x, y), FlxVector).length < GameConstants.Odin_SpellRange) {
 							i.setLeader(this);
+							var flash = new Pillar(i.getPosition().x, i.getPosition().y, FlxColor.YELLOW);
+							gameState.add(flash);
 						}
 					}
 				}
@@ -137,12 +141,15 @@ class Odin extends Agent {
 	 */
 	override public function update(elapsed:Float):Void {
 		var newScale = Math.min(1 + (gameState.followers.length / 20) * GameConstants.Odin_FollowerScaleMultiplier, 4);
-		if (newScale != scale.x)
-		{
+		if (newScale != scale.x) {
 			scale.x = newScale;
 			scale.y = newScale;
 			var theight = Math.abs(scale.y) * frameHeight;
 			this.offset.y = theight - (16 * Math.abs(scale.y)) - (gameState.followers.length * GameConstants.Odin_FollowerScaleMultiplier);
+		}
+
+		if (animation.frameIndex == 18) {
+			setState(Idle, true);
 		}
 
 		frameCount++;

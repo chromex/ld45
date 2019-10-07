@@ -30,6 +30,7 @@ class Agent extends FlxSprite {
 	public var faction:Faction_Enum;
 
 	public var state:Agent_State_ENUM;
+
 	private var oldPosition:FlxPoint;
 	private var damageCounter:Float = 0;
 	private var gameState:PlayState;
@@ -59,7 +60,11 @@ class Agent extends FlxSprite {
 					gameState.followers.add(this);
 					++Stats.frens;
 				case enemy:
-					OriginColor = FlxColor.RED;
+					if (Std.is(this, Leader)) {
+						OriginColor = FlxColor.WHITE;
+					} else {
+						OriginColor = FlxColor.RED;
+					}
 					gameState.enemyFollowers.add(this);
 				case unset:
 					OriginColor = FlxColor.GRAY;
@@ -75,7 +80,11 @@ class Agent extends FlxSprite {
 						gameState.enemyFollowers.remove(this, true);
 						++Stats.frens;
 					case enemy:
-						OriginColor = FlxColor.RED;
+						if (Std.is(this, Leader)) {
+							OriginColor = FlxColor.WHITE;
+						} else {
+							OriginColor = FlxColor.RED;
+						}
 						gameState.enemyFollowers.add(this);
 						gameState.followers.remove(this, true);
 					case unset:
@@ -124,8 +133,14 @@ class Agent extends FlxSprite {
 		super.update(elapsed);
 		if (damageCounter > 0) {
 			damageCounter--;
-			if (color != FlxColor.RED) {
-				color = FlxColor.RED;
+			if (OriginColor == FlxColor.RED) {
+				if (color != FlxColor.BLACK) {
+					color = FlxColor.BLACK;
+				}
+			} else {
+				if (color != FlxColor.RED) {
+					color = FlxColor.RED;
+				}
 			}
 		} else {
 			if (OriginColor != FlxColor.GRAY) {
@@ -164,6 +179,5 @@ class Agent extends FlxSprite {
 		return state == Dead;
 	}
 
-	public function OnDed():Void {
-	}
+	public function OnDed():Void {}
 }
