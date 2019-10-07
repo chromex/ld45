@@ -4,7 +4,7 @@ import flixel.math.FlxPoint;
 
 class GameConstants {
 	public static var CameraLerp:Float = 0.3;
-	static public var Follower_MoveSpeed:Float = 70;
+	static public var Follower_MoveSpeed:Float = 100;
 
 	// determines the average amount of time before a follower moves around while idle
 	static public var Follower_Restlessness:Int = 5;
